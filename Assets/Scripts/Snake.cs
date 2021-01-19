@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(TailGenerator))]
 public class Snake : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private SnakeHead _head;
+    private List<Segment> _tail;
+    private TailGenerator _tailGenerator;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        _tailGenerator = GetComponent<TailGenerator>();
+        _tail = _tailGenerator.Generate();
     }
 }
