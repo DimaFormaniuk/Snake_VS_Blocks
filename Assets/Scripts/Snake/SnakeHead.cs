@@ -16,4 +16,12 @@ public class SnakeHead : MonoBehaviour
     {
         _rigidbody2D.MovePosition(newPosition);
     }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if(collision.gameObject.TryGetComponent(out Block block))
+        {
+            block.Fill();
+        }
+    }
 }
