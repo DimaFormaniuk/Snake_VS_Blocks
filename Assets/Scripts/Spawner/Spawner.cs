@@ -4,25 +4,37 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [Header("General")]
     [SerializeField] private Transform _container;
     [SerializeField] private int _repeatCount;
     [SerializeField] private int _distanceBetweenFullLine;
     [SerializeField] private int _distanceBetweenRandomLine;
-
+    [Header("Block")]
     [SerializeField] private Block _blockTemplate;
     [SerializeField] private int _blockSpawnChance;
+    [Header("Wall")]
+    [SerializeField] private Wall _wallTemplate;
+    [SerializeField] private int _wallSpawnChance;
 
-    private SpawnPoint[] _blockSpawnPoints;
+    private BlockSpawnPoint[] _blockSpawnPoints;
+    private WallSpawnPoint[] _wallSpawnPoints;
+
 
     private void Start()
     {
-        _blockSpawnPoints = GetComponentsInChildren<SpawnPoint>();
+        _blockSpawnPoints = GetComponentsInChildren<BlockSpawnPoint>();
+        _wallSpawnPoints = GetComponentsInChildren<WallSpawnPoint>();
 
         for (int i = 0; i < _repeatCount; i++)
         {
             MoveSpawner(_distanceBetweenFullLine);
+            GenerateRandomElements(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance, _distanceBetweenFullLine, _distanceBetweenFullLine / 2f);
+
             GenerateFullLine(_blockSpawnPoints, _blockTemplate.gameObject);
             MoveSpawner(_distanceBetweenRandomLine);
+
+            GenerateRandomElements(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance, _distanceBetweenRandomLine, _distanceBetweenRandomLine / 2f);
+
             GenerateRandomElements(_blockSpawnPoints, _blockTemplate.gameObject, _blockSpawnChance);
         }
     }
@@ -35,20 +47,21 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void GenerateRandomElements(SpawnPoint[] spawnPoints, GameObject generateElement, int spawnChance)
+    private void GenerateRandomElements(SpawnPoint[] spawnPoints, GameObject generateElement, int spawnChance, int scaleY = 1, float offsetY = 0)
     {
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             if (Random.Range(0, 100) < spawnChance)
             {
-                GameObject element = GenerateElement(spawnPoints[i].transform.position, generateElement);
+                GameObject element = GenerateElement(spawnPoints[i].transform.position, generateElement, offsetY);
+                element.transform.localScale = new Vector3(element.transform.localScale.x, scaleY, element.transform.localScale.z);
             }
         }
     }
 
-    private GameObject GenerateElement(Vector3 spawnPoint, GameObject generatedElement)
+    private GameObject GenerateElement(Vector3 spawnPoint, GameObject generatedElement, float offsetY = 0)
     {
-        spawnPoint.y -= generatedElement.transform.localScale.y;// / 2;
+        spawnPoint.y -= offsetY; //generatedElement.transform.localScale.y;// / 2;
         return Instantiate(generatedElement, spawnPoint, Quaternion.identity);
     }
 
