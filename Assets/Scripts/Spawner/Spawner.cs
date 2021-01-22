@@ -35,7 +35,7 @@ public class Spawner : MonoBehaviour
 
             GenerateRandomElements(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance, _distanceBetweenRandomLine, _distanceBetweenRandomLine / 2f);
 
-            GenerateRandomElements(_blockSpawnPoints, _blockTemplate.gameObject, _blockSpawnChance);
+            GenerateRandomElements(_blockSpawnPoints, _blockTemplate.gameObject, _blockSpawnChance, 0.15f);
         }
     }
 
@@ -47,7 +47,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void GenerateRandomElements(SpawnPoint[] spawnPoints, GameObject generateElement, int spawnChance, int scaleY = 1, float offsetY = 0)
+    private void GenerateRandomElements(SpawnPoint[] spawnPoints, GameObject generateElement, int spawnChance, float scaleY = 1, float offsetY = 0)
     {
         for (int i = 0; i < spawnPoints.Length; i++)
         {
@@ -61,7 +61,7 @@ public class Spawner : MonoBehaviour
 
     private GameObject GenerateElement(Vector3 spawnPoint, GameObject generatedElement, float offsetY = 0)
     {
-        spawnPoint.y -= offsetY; //generatedElement.transform.localScale.y;// / 2;
+        spawnPoint.y -= offsetY;
         return Instantiate(generatedElement, spawnPoint, Quaternion.identity);
     }
 
